@@ -38,17 +38,14 @@ char* dsStrClearJoin(char** s1, const char* s2){
 }
 
 char* dsReadFile(const char* filePath){
-	int fd = open(filePath,  O_CREAT);
+	int fd = open(filePath, O_RDONLY);
 	char buf[BUFSIZE + 1];
 	char* ret = NULL;
 	int rdrt;
-	if (fd == -1){
-		printf("%s\n", strerror(errno));
+	if (fd == -1)
 		return NULL;
-	}
 	while ((rdrt = read(fd, buf, BUFSIZE)) > 0){
 		buf[rdrt] = 0;
-		printf("%s\n", buf);
 		dsStrClearJoin(&ret, buf);
 	}
 	close(fd);
