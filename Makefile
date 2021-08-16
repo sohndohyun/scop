@@ -6,7 +6,10 @@ GLFW = lib/glfw/3.3.4
 LIB_GLFW = libglfw.3.dylib
 
 HDRS = -I./include -I./$(GLEW)/include -I./$(GLFW)/include
-SRCS = source/main.c
+SRCS = \
+	source/main.c \
+	source/dsUtils.c \
+	source/loadShader.c 
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
@@ -31,5 +34,5 @@ fclean: clean
 
 re: fclean all
 
-test: all
+test: re
 	./$(NAME)

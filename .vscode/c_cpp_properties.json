@@ -5,7 +5,11 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/dependencies/glew/2.2.0_1/include",
-                "${workspaceFolder}/dependencies/glfw/3.3.4/include"
+                "${workspaceFolder}/dependencies/glfw/3.3.4/include",
+                "${workspaceFolder}/dependencies/glfw/3.3.4/include",
+                "${workspaceFolder}/lib/glew/2.2.0_1/include",
+                "${workspaceFolder}/lib/glfw/3.3.4/include",
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "macFrameworkPath": [
