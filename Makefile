@@ -9,7 +9,8 @@ HDRS = -I./include -I./$(GLEW)/include -I./$(GLFW)/include
 SRCS = \
 	source/main.c \
 	source/dsUtils.c \
-	source/loadShader.c 
+	source/loadShader.c \
+	source/dsgm.c 
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
