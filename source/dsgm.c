@@ -8,7 +8,7 @@
 #define PI 3.141592
 
 float radian(float angle){
-	return angle * (PI / 180.0f);
+	return angle * 0.01745329251994329576923690768489;
 }
 
 t_vec4 vec4(float x, float y, float z, float w){
@@ -153,8 +153,8 @@ t_mat4 perspective(float fov, float aspect, float near, float far){
 	mat.v[0] = 1.0f / (aspect * thf);
 	mat.v[5] = 1.0f / thf;
 	mat.v[10] = -(far + near) / (far - near);
-	mat.v[11] = -1.0f;
-	mat.v[14] = -(far * near * 2.0f) / (far - near);
+	mat.v[11] = -(far * near * 2.0f) / (far - near);
+	mat.v[14] = -1.0f;
 	mat.v[15] = 0.0f;
 	return mat;
 }
@@ -178,4 +178,29 @@ void matlog(t_mat4 mat){
 	printf("|%7.2f, %7.2f, %7.2f, %7.2f|\n", mat.v[4], mat.v[5], mat.v[6], mat.v[7]);
 	printf("|%7.2f, %7.2f, %7.2f, %7.2f|\n", mat.v[8], mat.v[9], mat.v[10], mat.v[11]);
 	printf("|%7.2f, %7.2f, %7.2f, %7.2f|\n", mat.v[12], mat.v[13], mat.v[14], mat.v[15]);
+}
+
+t_mat4 flip(t_mat4 mat){
+	t_mat4 ret;
+	ret.v[0] = mat.v[0];
+	ret.v[1] = mat.v[4];
+	ret.v[2] = mat.v[8];
+	ret.v[3] = mat.v[12];
+
+	ret.v[4] = mat.v[1];
+	ret.v[5] = mat.v[5];
+	ret.v[6] = mat.v[9];
+	ret.v[7] = mat.v[13];
+
+	ret.v[8] = mat.v[2];
+	ret.v[9] = mat.v[6];
+	ret.v[10] = mat.v[10];
+	ret.v[11] = mat.v[14];
+
+	ret.v[12] = mat.v[3];
+	ret.v[13] = mat.v[7];
+	ret.v[14] = mat.v[11];
+	ret.v[15] = mat.v[15];
+
+	return ret;
 }

@@ -34,3 +34,4 @@ t_mat4 lookAt(t_vec3 eye, t_vec3 at, t_vec3 up);
 t_mat4 perspective(float fov, float aspect, float near_plane, float far_plane);
 t_mat4 mat4_mult(t_mat4 left, t_mat4 right);
 void matlog(t_mat4 mat);
+t_mat4 flip(t_mat4 mat);
