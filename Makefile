@@ -10,7 +10,8 @@ SRCS = \
 	source/main.c \
 	source/dsUtils.c \
 	source/loadShader.c \
-	source/dsgm.c 
+	source/dsgm.c \
+	source/loadBmp.c
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
