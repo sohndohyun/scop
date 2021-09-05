@@ -37,11 +37,27 @@ t_vec3 vec3_normalize(t_vec3 vec){
 	return ret;
 }
 
+t_vec3 vec3_add(t_vec3 a, t_vec3 b){
+	t_vec3 ret;
+	ret.vX = a.vX + b.vX;
+	ret.vY = a.vY + b.vY;
+	ret.vZ = a.vZ + b.vZ;
+	return ret;
+}
+
 t_vec3 vec3_sub(t_vec3 a, t_vec3 b){
 	t_vec3 ret;
 	ret.vX = a.vX - b.vX;
 	ret.vY = a.vY - b.vY;
 	ret.vZ = a.vZ - b.vZ;
+	return ret;
+}
+
+t_vec3 vec3_mult(t_vec3 a, float b){
+	t_vec3 ret;
+	ret.vX = a.vX * b;
+	ret.vY = a.vY * b;
+	ret.vZ = a.vZ * b;
 	return ret;
 }
 

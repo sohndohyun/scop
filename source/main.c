@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "dsgm.h"
 #include "texture.h"
+#include "control.h"
 
 GLFWwindow *window;
 
@@ -27,11 +28,10 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1024, 768, "Tutorial 03 - Matrices", NULL, NULL);
+	window = glfwCreateWindow(1024, 768, "scop", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
-		getchar();
 		glfwTerminate();
 		return -1;
 	}
@@ -42,16 +42,23 @@ int main(void)
 	if (glewInit() != GLEW_OK)
 	{
 		fprintf(stderr, "Failed to initialize GLEW\n");
-		getchar();
 		glfwTerminate();
 		return -1;
 	}
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	glfwPollEvents();
+	glfwSetCursorPos(window, 1024/2, 768/2);
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -62,22 +69,6 @@ int main(void)
 
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	t_mat4 Projection = perspective(radian(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-	// Or, for an ortho camera :
-	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
-
-	// Camera matrix
-	t_mat4 View = lookAt(
-		vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-		vec3(0, 0, 0), // and looks at the origin
-		vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	t_mat4 Model = idmat();
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	t_mat4 MVP = flip(mat4_mult(Projection, mat4_mult(View, Model))); // Remember, matrix multiplication is the other way around
 
 	GLuint Texture = loadBmp("uvtemplate.bmp");
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
@@ -168,14 +159,21 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
+
+	initControl();
+	t_mat4 MVP;
+	double lastTime = glfwGetTime();
+	double currentTime;
 	do
 	{
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Compute the MVP matrix from keyboard and mouse input
+		currentTime = glfwGetTime();
+		computeMatricesFromInputs(currentTime - lastTime);
+		lastTime = currentTime;
+		MVP = flip(mat4_mult(getProjectionMatrix(), mat4_mult(getViewMatrix(), idmat())));
 
 		// Use our shader
 		glUseProgram(programID);
