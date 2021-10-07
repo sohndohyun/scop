@@ -6,7 +6,8 @@
                 "${default}",
                 "${workspaceFolder}/lib/glew/2.2.0_1/include",
                 "${workspaceFolder}/lib/glfw/3.3.4/include",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/lib/libft/include"
             ],
             "defines": [],
             "macFrameworkPath": [

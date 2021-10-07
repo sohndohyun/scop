@@ -13,6 +13,10 @@ typedef struct s_vec3{
 	float v[3];
 }t_vec3;
 
+typedef struct s_vec2{
+	float v[2];
+}t_vec2;
+
 typedef struct s_mat4{
 	float v[16];
 }t_mat4;

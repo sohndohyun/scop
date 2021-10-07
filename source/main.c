@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "shader.h"
+#include "env.h"
+#include "loader.h"
 #include "dsgm.h"
-#include "texture.h"
 #include "control.h"
 
-GLFWwindow *window;
+GLFWwindow *g_window;
+t_env g_env;
 
 int main(void)
 {
@@ -28,14 +29,14 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1024, 768, "scop", NULL, NULL);
-	if (window == NULL)
+	g_window = glfwCreateWindow(1024, 768, "scop", NULL, NULL);
+	if (g_window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(g_window);
 
 	// Initialize GLEW
 	glewExperimental = GL_TRUE; // Needed for core profile
@@ -47,11 +48,11 @@ int main(void)
 	}
 
 	// Ensure we can capture the escape key being pressed below
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(g_window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetInputMode(g_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwPollEvents();
-	glfwSetCursorPos(window, 1024/2, 768/2);
+	glfwSetCursorPos(g_window, 1024/2, 768/2);
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -72,6 +73,8 @@ int main(void)
 
 	GLuint Texture = loadBmp("uvtemplate.bmp");
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+
+	loadObj("42.obj");
 
 	static const GLfloat g_vertex_buffer_data[] = {
 		-1.0f, -1.0f, -1.0f, // triangle 1 : begin
@@ -116,10 +119,11 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
+
 	static const GLfloat g_uv_buffer_data[] = {
-		0.000059f, 1.0f - 0.000004f,
-		0.000103f, 1.0f - 0.336048f,
-		0.335973f, 1.0f - 0.335903f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
 		1.000023f, 1.0f - 0.000013f,
 		0.667979f, 1.0f - 0.335851f,
 		0.999958f, 1.0f - 0.336064f,
@@ -217,12 +221,12 @@ int main(void)
 		glDisableVertexAttribArray(1);
 
 		// Swap buffers
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(g_window);
 		glfwPollEvents();
 
 	} // Check if the ESC key was pressed or the window was closed
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0);
+	while (glfwGetKey(g_window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+		   glfwWindowShouldClose(g_window) == 0);
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);

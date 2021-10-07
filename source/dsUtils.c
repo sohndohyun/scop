@@ -51,3 +51,13 @@ char* dsReadFile(const char* filePath){
 	close(fd);
 	return ret;
 }
+
+void dsFreeStrArray(const char** arr){
+	char** temp;
+	temp = arr;
+	while (temp){
+		free(temp);
+		++temp;
+	}
+	free(arr);
+}
